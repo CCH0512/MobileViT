@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>loss_fn.classification_loss_fns.cross_entropy_with_neural_aug &mdash; CVNets: A library for training computer vision networks  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> CVNets: A library for training computer vision networks
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">CVNets: A library for training computer vision networks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../loss_fn.html">loss_fn</a> &raquo;</li>
+          <li><a href="../classification_loss_fns.html">loss_fn.classification_loss_fns</a> &raquo;</li>
+      <li>loss_fn.classification_loss_fns.cross_entropy_with_neural_aug</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for loss_fn.classification_loss_fns.cross_entropy_with_neural_aug</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># For licensing see accompanying LICENSE file.</span>
+<span class="c1"># Copyright (C) 2022 Apple Inc. All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">register_classification_loss_fn</span>
+
+<span class="kn">from</span> <span class="nn">.cross_entropy</span> <span class="kn">import</span> <span class="n">ClsCrossEntropy</span>
+<span class="kn">from</span> <span class="nn">..base_neural_aug</span> <span class="kn">import</span> <span class="n">BaseNeuralAug</span>
+
+
+<div class="viewcode-block" id="CrossEntropyWithNA"><a class="viewcode-back" href="../../../autogen/loss_fn.classification_loss_fns.html#loss_fn.classification_loss_fns.cross_entropy_with_neural_aug.CrossEntropyWithNA">[docs]</a><span class="nd">@register_classification_loss_fn</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;cross_entropy_with_na&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CrossEntropyWithNA</span><span class="p">(</span><span class="n">ClsCrossEntropy</span><span class="p">,</span> <span class="n">BaseNeuralAug</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Cross entropy with Perceptual loss for classification tasks with neural augmentation&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="CrossEntropyWithNA.__init__"><a class="viewcode-back" href="../../../autogen/loss_fn.classification_loss_fns.html#loss_fn.classification_loss_fns.cross_entropy_with_neural_aug.CrossEntropyWithNA.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">ClsCrossEntropy</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">BaseNeuralAug</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CrossEntropyWithNA.add_arguments"><a class="viewcode-back" href="../../../autogen/loss_fn.classification_loss_fns.html#loss_fn.classification_loss_fns.cross_entropy_with_neural_aug.CrossEntropyWithNA.add_arguments">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">parser</span></div>
+
+<div class="viewcode-block" id="CrossEntropyWithNA.forward"><a class="viewcode-back" href="../../../autogen/loss_fn.classification_loss_fns.html#loss_fn.classification_loss_fns.cross_entropy_with_neural_aug.CrossEntropyWithNA.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">input_sample</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">prediction</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Prediction needs to be an instance of Dict and must contain logits and augmented_tensor&quot;</span>
+                <span class="s2">&quot; as keys&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">{</span><span class="s2">&quot;augmented_tensor&quot;</span><span class="p">,</span> <span class="s2">&quot;logits&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">prediction</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Prediction needs to be an instance of Dict and must contain logits and augmented_tensor&quot;</span>
+                <span class="s2">&quot; as keys. Got keys: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prediction</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="p">)</span>
+
+        <span class="n">augmented_tensor</span> <span class="o">=</span> <span class="n">prediction</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;augmented_tensor&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="n">prediction</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;logits&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">augmented_tensor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ce_loss</span> <span class="o">=</span> <span class="n">ClsCrossEntropy</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="n">input_sample</span><span class="o">=</span><span class="n">input_sample</span><span class="p">,</span>
+                <span class="n">prediction</span><span class="o">=</span><span class="n">logits</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
+                <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwargs</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;total_loss&quot;</span><span class="p">:</span> <span class="n">ce_loss</span><span class="p">}</span>
+
+        <span class="n">loss_na</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_neural_aug</span><span class="p">(</span>
+            <span class="n">input_tensor</span><span class="o">=</span><span class="n">input_sample</span><span class="p">,</span>
+            <span class="n">augmented_tensor</span><span class="o">=</span><span class="n">augmented_tensor</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+
+        <span class="n">ce_loss</span> <span class="o">=</span> <span class="n">ClsCrossEntropy</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">input_sample</span><span class="o">=</span><span class="n">augmented_tensor</span><span class="p">,</span>
+            <span class="n">prediction</span><span class="o">=</span><span class="n">logits</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;total_loss&quot;</span><span class="p">:</span> <span class="n">loss_na</span> <span class="o">+</span> <span class="n">ce_loss</span><span class="p">,</span>
+            <span class="s2">&quot;na_loss&quot;</span><span class="p">:</span> <span class="n">loss_na</span><span class="p">,</span>
+            <span class="s2">&quot;cls_loss&quot;</span><span class="p">:</span> <span class="n">ce_loss</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">repr_str</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="se">\n\t</span><span class="s2">ignore_idx=</span><span class="si">{}</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">class_wts=</span><span class="si">{}</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">label_smoothing=</span><span class="si">{}{}</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ignore_idx</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">use_class_wts</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">label_smoothing</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">repr_na</span><span class="p">(),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">repr_str</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

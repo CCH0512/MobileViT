@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cvnets.models.multi_modal_img_text.base_multi_modal_img_text &mdash; CVNets: A library for training computer vision networks  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> CVNets: A library for training computer vision networks
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">CVNets: A library for training computer vision networks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../../cvnets.html">cvnets</a> &raquo;</li>
+          <li><a href="../../models.html">cvnets.models</a> &raquo;</li>
+          <li><a href="../multi_modal_img_text.html">cvnets.models.multi_modal_img_text</a> &raquo;</li>
+      <li>cvnets.models.multi_modal_img_text.base_multi_modal_img_text</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cvnets.models.multi_modal_img_text.base_multi_modal_img_text</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># For licensing see accompanying LICENSE file.</span>
+<span class="c1"># Copyright (C) 2022 Apple Inc. All Rights Reserved.</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span><span class="p">,</span> <span class="n">Tensor</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
+
+<span class="kn">from</span> <span class="nn">...layers</span> <span class="kn">import</span> <span class="n">norm_layers_tuple</span>
+<span class="kn">from</span> <span class="nn">...misc.init_utils</span> <span class="kn">import</span> <span class="n">initialize_weights</span>
+
+
+<div class="viewcode-block" id="BaseMultiModalImageText"><a class="viewcode-back" href="../../../../autogen/cvnets.models.multi_modal_img_text.html#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText">[docs]</a><span class="k">class</span> <span class="nc">BaseMultiModalImageText</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for multi-modal image-text data&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BaseMultiModalImageText.__init__"><a class="viewcode-back" href="../../../../autogen/cvnets.models.multi_modal_img_text.html#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr_multiplier_img_encoder</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;model.multi_modal_image_text.lr_multiplier_img_encoder&quot;</span><span class="p">,</span> <span class="mf">1.0</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr_multiplier_text_encoder</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;model.multi_modal_image_text.lr_multiplier_text_encoder&quot;</span><span class="p">,</span> <span class="mf">1.0</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseMultiModalImageText.add_arguments"><a class="viewcode-back" href="../../../../autogen/cvnets.models.multi_modal_img_text.html#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.add_arguments">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add model specific arguments&quot;&quot;&quot;</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--model.multi-modal-image-text.name&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the multi-modal image-text model&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--model.multi-modal-image-text.lr-multiplier-img-encoder&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;LR multiplier for the image encoder in </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--model.multi-modal-image-text.lr-multiplier-text-encoder&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;LR multiplier for the text encoder in </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--model.multi-modal-image-text.pretrained&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path of the pretrained backbone&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--model.multi-modal-image-text.freeze-batch-norm&quot;</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Freeze batch norm layers&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">parser</span></div>
+
+<div class="viewcode-block" id="BaseMultiModalImageText.reset_parameters"><a class="viewcode-back" href="../../../../autogen/cvnets.models.multi_modal_img_text.html#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Reset weights of a given layer&quot;&quot;&quot;</span>
+        <span class="n">initialize_weights</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="BaseMultiModalImageText.get_trainable_parameters"><a class="viewcode-back" href="../../../../autogen/cvnets.models.multi_modal_img_text.html#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.get_trainable_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_trainable_parameters</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">weight_decay</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">no_decay_bn_filter_bias</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="BaseMultiModalImageText.profile_model"><a class="viewcode-back" href="../../../../autogen/cvnets.models.multi_modal_img_text.html#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.profile_model">[docs]</a>    <span class="k">def</span> <span class="nf">profile_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Child classes must implement this function to compute FLOPs and parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="BaseMultiModalImageText.freeze_norm_layers"><a class="viewcode-back" href="../../../../autogen/cvnets.models.multi_modal_img_text.html#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.freeze_norm_layers">[docs]</a>    <span class="k">def</span> <span class="nf">freeze_norm_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">norm_layers_tuple</span><span class="p">):</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">training</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="BaseMultiModalImageText.dummy_input_and_label"><a class="viewcode-back" href="../../../../autogen/cvnets.models.multi_modal_img_text.html#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.dummy_input_and_label">[docs]</a>    <span class="k">def</span> <span class="nf">dummy_input_and_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Create dummy input and labels for CI/CD purposes. Child classes must override it</span>
+<span class="sd">        if functionality is different.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="BaseMultiModalImageText.forward"><a class="viewcode-back" href="../../../../autogen/cvnets.models.multi_modal_img_text.html#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

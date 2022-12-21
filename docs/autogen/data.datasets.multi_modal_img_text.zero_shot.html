@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>data.datasets.multi_modal_img_text.zero_shot package &mdash; CVNets: A library for training computer vision networks  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CVNets: A library for training computer vision networks
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CVNets: A library for training computer vision networks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>data.datasets.multi_modal_img_text.zero_shot package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/autogen/data.datasets.multi_modal_img_text.zero_shot.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="data-datasets-multi-modal-img-text-zero-shot-package">
+<h1>data.datasets.multi_modal_img_text.zero_shot package<a class="headerlink" href="#data-datasets-multi-modal-img-text-zero-shot-package" title="Permalink to this headline"></a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="module-data.datasets.multi_modal_img_text.zero_shot.base_zero_shot">
+<span id="data-datasets-multi-modal-img-text-zero-shot-base-zero-shot-module"></span><h2>data.datasets.multi_modal_img_text.zero_shot.base_zero_shot module<a class="headerlink" href="#module-data.datasets.multi_modal_img_text.zero_shot.base_zero_shot" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="data.datasets.multi_modal_img_text.zero_shot.base_zero_shot.BaseZeroShotDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">data.datasets.multi_modal_img_text.zero_shot.base_zero_shot.</span></span><span class="sig-name descname"><span class="pre">BaseZeroShotDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/multi_modal_img_text/zero_shot/base_zero_shot.html#BaseZeroShotDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.multi_modal_img_text.zero_shot.base_zero_shot.BaseZeroShotDataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base Dataset class for Zero shot tasks</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.multi_modal_img_text.zero_shot.base_zero_shot.BaseZeroShotDataset.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/multi_modal_img_text/zero_shot/base_zero_shot.html#BaseZeroShotDataset.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.multi_modal_img_text.zero_shot.base_zero_shot.BaseZeroShotDataset.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.multi_modal_img_text.zero_shot.base_zero_shot.BaseZeroShotDataset.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/multi_modal_img_text/zero_shot/base_zero_shot.html#BaseZeroShotDataset.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.multi_modal_img_text.zero_shot.base_zero_shot.BaseZeroShotDataset.add_arguments" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.multi_modal_img_text.zero_shot.base_zero_shot.BaseZeroShotDataset.class_names">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">class_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/multi_modal_img_text/zero_shot/base_zero_shot.html#BaseZeroShotDataset.class_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.multi_modal_img_text.zero_shot.base_zero_shot.BaseZeroShotDataset.class_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-data.datasets.multi_modal_img_text.zero_shot.imagenet">
+<span id="data-datasets-multi-modal-img-text-zero-shot-imagenet-module"></span><h2>data.datasets.multi_modal_img_text.zero_shot.imagenet module<a class="headerlink" href="#module-data.datasets.multi_modal_img_text.zero_shot.imagenet" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="data.datasets.multi_modal_img_text.zero_shot.imagenet.ImagenetDatasetZeroShot">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">data.datasets.multi_modal_img_text.zero_shot.imagenet.</span></span><span class="sig-name descname"><span class="pre">ImagenetDatasetZeroShot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/multi_modal_img_text/zero_shot/imagenet.html#ImagenetDatasetZeroShot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.multi_modal_img_text.zero_shot.imagenet.ImagenetDatasetZeroShot" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#data.datasets.multi_modal_img_text.zero_shot.base_zero_shot.BaseZeroShotDataset" title="data.datasets.multi_modal_img_text.zero_shot.base_zero_shot.BaseZeroShotDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">data.datasets.multi_modal_img_text.zero_shot.base_zero_shot.BaseZeroShotDataset</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">torchvision.datasets.folder.ImageFolder</span></code></p>
+<p>ImageNet Dataset for zero-shot evaluation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.multi_modal_img_text.zero_shot.imagenet.ImagenetDatasetZeroShot.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/data/datasets/multi_modal_img_text/zero_shot/imagenet.html#ImagenetDatasetZeroShot.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.multi_modal_img_text.zero_shot.imagenet.ImagenetDatasetZeroShot.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.multi_modal_img_text.zero_shot.imagenet.ImagenetDatasetZeroShot.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/multi_modal_img_text/zero_shot/imagenet.html#ImagenetDatasetZeroShot.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.multi_modal_img_text.zero_shot.imagenet.ImagenetDatasetZeroShot.add_arguments" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.multi_modal_img_text.zero_shot.imagenet.ImagenetDatasetZeroShot.class_names">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">class_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/data/datasets/multi_modal_img_text/zero_shot/imagenet.html#ImagenetDatasetZeroShot.class_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.multi_modal_img_text.zero_shot.imagenet.ImagenetDatasetZeroShot.class_names" title="Permalink to this definition"></a></dt>
+<dd><p>ImageNet class names</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data.datasets.multi_modal_img_text.zero_shot.imagenet.clip_text_template">
+<span class="sig-prename descclassname"><span class="pre">data.datasets.multi_modal_img_text.zero_shot.imagenet.</span></span><span class="sig-name descname"><span class="pre">clip_text_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/multi_modal_img_text/zero_shot/imagenet.html#clip_text_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.multi_modal_img_text.zero_shot.imagenet.clip_text_template" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-data.datasets.multi_modal_img_text.zero_shot">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-data.datasets.multi_modal_img_text.zero_shot" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="data.datasets.multi_modal_img_text.zero_shot.register_zero_shot_dataset">
+<span class="sig-prename descclassname"><span class="pre">data.datasets.multi_modal_img_text.zero_shot.</span></span><span class="sig-name descname"><span class="pre">register_zero_shot_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/multi_modal_img_text/zero_shot.html#register_zero_shot_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.multi_modal_img_text.zero_shot.register_zero_shot_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>Helper function to register zero-shot datasets</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data.datasets.multi_modal_img_text.zero_shot.supported_zero_shot_dataset_str">
+<span class="sig-prename descclassname"><span class="pre">data.datasets.multi_modal_img_text.zero_shot.</span></span><span class="sig-name descname"><span class="pre">supported_zero_shot_dataset_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/data/datasets/multi_modal_img_text/zero_shot.html#supported_zero_shot_dataset_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.multi_modal_img_text.zero_shot.supported_zero_shot_dataset_str" title="Permalink to this definition"></a></dt>
+<dd><p>Helper function to print error message in case zero shot dataset is not available</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data.datasets.multi_modal_img_text.zero_shot.arguments_zero_shot_dataset">
+<span class="sig-prename descclassname"><span class="pre">data.datasets.multi_modal_img_text.zero_shot.</span></span><span class="sig-name descname"><span class="pre">arguments_zero_shot_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../_modules/data/datasets/multi_modal_img_text/zero_shot.html#arguments_zero_shot_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.multi_modal_img_text.zero_shot.arguments_zero_shot_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>Helper function to get zero-shot dataset arguments</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data.datasets.multi_modal_img_text.zero_shot.build_zero_shot_dataset">
+<span class="sig-prename descclassname"><span class="pre">data.datasets.multi_modal_img_text.zero_shot.</span></span><span class="sig-name descname"><span class="pre">build_zero_shot_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/multi_modal_img_text/zero_shot.html#build_zero_shot_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.multi_modal_img_text.zero_shot.build_zero_shot_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>Helper function to build the zero shot datasets</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

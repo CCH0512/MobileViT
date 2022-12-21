@@ -1,0 +1,37 @@
+data.datasets.classification package
+====================================
+
+Submodules
+----------
+
+data.datasets.classification.imagenet module
+--------------------------------------------
+
+.. automodule:: data.datasets.classification.imagenet
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+data.datasets.classification.imagenet\_opencv module
+----------------------------------------------------
+
+.. automodule:: data.datasets.classification.imagenet_opencv
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+data.datasets.classification.imagenet\_v2 module
+------------------------------------------------
+
+.. automodule:: data.datasets.classification.imagenet_v2
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: data.datasets.classification
+   :members:
+   :undoc-members:
+   :show-inheritance:

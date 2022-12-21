@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cvnets.models.multi_modal_img_text package &mdash; CVNets: A library for training computer vision networks  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CVNets: A library for training computer vision networks
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CVNets: A library for training computer vision networks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>cvnets.models.multi_modal_img_text package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/autogen/cvnets.models.multi_modal_img_text.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="cvnets-models-multi-modal-img-text-package">
+<h1>cvnets.models.multi_modal_img_text package<a class="headerlink" href="#cvnets-models-multi-modal-img-text-package" title="Permalink to this headline"></a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="module-cvnets.models.multi_modal_img_text.base_multi_modal_img_text">
+<span id="cvnets-models-multi-modal-img-text-base-multi-modal-img-text-module"></span><h2>cvnets.models.multi_modal_img_text.base_multi_modal_img_text module<a class="headerlink" href="#module-cvnets.models.multi_modal_img_text.base_multi_modal_img_text" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cvnets.models.multi_modal_img_text.base_multi_modal_img_text.</span></span><span class="sig-name descname"><span class="pre">BaseMultiModalImageText</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/base_multi_modal_img_text.html#BaseMultiModalImageText"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Base class for multi-modal image-text data</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/base_multi_modal_img_text.html#BaseMultiModalImageText.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/base_multi_modal_img_text.html#BaseMultiModalImageText.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.add_arguments" title="Permalink to this definition"></a></dt>
+<dd><p>Add model specific arguments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.reset_parameters">
+<span class="sig-name descname"><span class="pre">reset_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/base_multi_modal_img_text.html#BaseMultiModalImageText.reset_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.reset_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Reset weights of a given layer</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.get_trainable_parameters">
+<span class="sig-name descname"><span class="pre">get_trainable_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight_decay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_decay_bn_filter_bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/base_multi_modal_img_text.html#BaseMultiModalImageText.get_trainable_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.get_trainable_parameters" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.profile_model">
+<span class="sig-name descname"><span class="pre">profile_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/base_multi_modal_img_text.html#BaseMultiModalImageText.profile_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.profile_model" title="Permalink to this definition"></a></dt>
+<dd><p>Child classes must implement this function to compute FLOPs and parameters</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.freeze_norm_layers">
+<span class="sig-name descname"><span class="pre">freeze_norm_layers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/base_multi_modal_img_text.html#BaseMultiModalImageText.freeze_norm_layers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.freeze_norm_layers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.dummy_input_and_label">
+<span class="sig-name descname"><span class="pre">dummy_input_and_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/base_multi_modal_img_text.html#BaseMultiModalImageText.dummy_input_and_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.dummy_input_and_label" title="Permalink to this definition"></a></dt>
+<dd><p>Create dummy input and labels for CI/CD purposes. Child classes must override it
+if functionality is different.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/base_multi_modal_img_text.html#BaseMultiModalImageText.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cvnets.models.multi_modal_img_text.clip">
+<span id="cvnets-models-multi-modal-img-text-clip-module"></span><h2>cvnets.models.multi_modal_img_text.clip module<a class="headerlink" href="#module-cvnets.models.multi_modal_img_text.clip" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.clip.CLIP">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cvnets.models.multi_modal_img_text.clip.</span></span><span class="sig-name descname"><span class="pre">CLIP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/clip.html#CLIP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.clip.CLIP" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText" title="cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText"><code class="xref py py-class docutils literal notranslate"><span class="pre">cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText</span></code></a></p>
+<p>Base class for multi-modal image-text data</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.clip.CLIP.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/clip.html#CLIP.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.clip.CLIP.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.clip.CLIP.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/clip.html#CLIP.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.clip.CLIP.add_arguments" title="Permalink to this definition"></a></dt>
+<dd><p>Add model specific arguments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.clip.CLIP.reset_parameters">
+<span class="sig-name descname"><span class="pre">reset_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/clip.html#CLIP.reset_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.clip.CLIP.reset_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Reset weights image and text models</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.clip.CLIP.get_trainable_parameters">
+<span class="sig-name descname"><span class="pre">get_trainable_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight_decay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_decay_bn_filter_bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/clip.html#CLIP.get_trainable_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.clip.CLIP.get_trainable_parameters" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.clip.CLIP.profile_model">
+<span class="sig-name descname"><span class="pre">profile_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/clip.html#CLIP.profile_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.clip.CLIP.profile_model" title="Permalink to this definition"></a></dt>
+<dd><p>Child classes must implement this function to compute FLOPs and parameters</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.clip.CLIP.freeze_norm_layers">
+<span class="sig-name descname"><span class="pre">freeze_norm_layers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/clip.html#CLIP.freeze_norm_layers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.clip.CLIP.freeze_norm_layers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.clip.CLIP.dummy_input_and_label">
+<span class="sig-name descname"><span class="pre">dummy_input_and_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/clip.html#CLIP.dummy_input_and_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.clip.CLIP.dummy_input_and_label" title="Permalink to this definition"></a></dt>
+<dd><p>Create dummy input and labels for CI/CD purposes. Child classes must override it
+if functionality is different.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.clip.CLIP.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/clip.html#CLIP.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.clip.CLIP.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.clip.CLIP.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cvnets.models.multi_modal_img_text.clip.CLIP.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.clip.update_image_classifier">
+<span class="sig-prename descclassname"><span class="pre">cvnets.models.multi_modal_img_text.clip.</span></span><span class="sig-name descname"><span class="pre">update_image_classifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_classifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">projection_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.nn.modules.module.Module</span></span></span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text/clip.html#update_image_classifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.clip.update_image_classifier" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-cvnets.models.multi_modal_img_text">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cvnets.models.multi_modal_img_text" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.register_multi_modal_image_text">
+<span class="sig-prename descclassname"><span class="pre">cvnets.models.multi_modal_img_text.</span></span><span class="sig-name descname"><span class="pre">register_multi_modal_image_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text.html#register_multi_modal_image_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.register_multi_modal_image_text" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.arguments_multi_modal_image_text">
+<span class="sig-prename descclassname"><span class="pre">cvnets.models.multi_modal_img_text.</span></span><span class="sig-name descname"><span class="pre">arguments_multi_modal_image_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text.html#arguments_multi_modal_image_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.arguments_multi_modal_image_text" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.supported_model_str">
+<span class="sig-prename descclassname"><span class="pre">cvnets.models.multi_modal_img_text.</span></span><span class="sig-name descname"><span class="pre">supported_model_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text.html#supported_model_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.supported_model_str" title="Permalink to this definition"></a></dt>
+<dd><p>Helper utility to print supported model names in case specified model_name
+is not part of the implemented models.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cvnets.models.multi_modal_img_text.build_multi_modal_image_text_model">
+<span class="sig-prename descclassname"><span class="pre">cvnets.models.multi_modal_img_text.</span></span><span class="sig-name descname"><span class="pre">build_multi_modal_image_text_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText" title="cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText"><span class="pre">cvnets.models.multi_modal_img_text.base_multi_modal_img_text.BaseMultiModalImageText</span></a></span></span><a class="reference internal" href="../_modules/cvnets/models/multi_modal_img_text.html#build_multi_modal_image_text_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.multi_modal_img_text.build_multi_modal_image_text_model" title="Permalink to this definition"></a></dt>
+<dd><p>Helper function to build the multi-modal image-text model</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

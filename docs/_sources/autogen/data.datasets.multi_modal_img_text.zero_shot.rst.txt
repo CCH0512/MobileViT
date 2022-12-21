@@ -1,0 +1,29 @@
+data.datasets.multi\_modal\_img\_text.zero\_shot package
+========================================================
+
+Submodules
+----------
+
+data.datasets.multi\_modal\_img\_text.zero\_shot.base\_zero\_shot module
+------------------------------------------------------------------------
+
+.. automodule:: data.datasets.multi_modal_img_text.zero_shot.base_zero_shot
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+data.datasets.multi\_modal\_img\_text.zero\_shot.imagenet module
+----------------------------------------------------------------
+
+.. automodule:: data.datasets.multi_modal_img_text.zero_shot.imagenet
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: data.datasets.multi_modal_img_text.zero_shot
+   :members:
+   :undoc-members:
+   :show-inheritance:

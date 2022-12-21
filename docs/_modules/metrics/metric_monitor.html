@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>metrics.metric_monitor &mdash; CVNets: A library for training computer vision networks  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> CVNets: A library for training computer vision networks
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">CVNets: A library for training computer vision networks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+          <li><a href="../metrics.html">metrics</a> &raquo;</li>
+      <li>metrics.metric_monitor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for metrics.metric_monitor</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># For licensing see accompanying LICENSE file.</span>
+<span class="c1"># Copyright (C) 2022 Apple Inc. All Rights Reserved.</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
+
+<span class="kn">from</span> <span class="nn">utils.tensor_utils</span> <span class="kn">import</span> <span class="n">tensor_to_python_float</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="kn">from</span> <span class="nn">.topk_accuracy</span> <span class="kn">import</span> <span class="n">top_k_accuracy</span>
+<span class="kn">from</span> <span class="nn">.intersection_over_union</span> <span class="kn">import</span> <span class="n">compute_miou_batch</span>
+<span class="kn">from</span> <span class="nn">.psnr</span> <span class="kn">import</span> <span class="n">compute_psnr</span>
+
+
+<div class="viewcode-block" id="metric_monitor"><a class="viewcode-back" href="../../autogen/metrics.html#metrics.metric_monitor.metric_monitor">[docs]</a><span class="k">def</span> <span class="nf">metric_monitor</span><span class="p">(</span>
+    <span class="n">opts</span><span class="p">,</span>
+    <span class="n">pred_label</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">target_label</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">loss</span><span class="p">:</span> <span class="n">Tensor</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">metric_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="n">use_distributed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">grad_norm</span><span class="p">:</span> <span class="n">Optional</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">is_evaluation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function aggregate different metrics and convert them into floats, so that</span>
+<span class="sd">    they can be easily consumed by stats.py file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">metric_vals</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s2">&quot;loss&quot;</span> <span class="ow">in</span> <span class="n">metric_names</span><span class="p">:</span>
+        <span class="n">metric_vals</span><span class="p">[</span><span class="s2">&quot;loss&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gather_loss</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">use_distributed</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;grad_norm&quot;</span> <span class="ow">in</span> <span class="n">metric_names</span><span class="p">:</span>
+        <span class="n">metric_vals</span><span class="p">[</span><span class="s2">&quot;grad_norm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gather_grad_norm</span><span class="p">(</span>
+            <span class="n">grad_norm</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">use_distributed</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;top1&quot;</span> <span class="ow">in</span> <span class="n">metric_names</span><span class="p">:</span>
+        <span class="n">top_1</span><span class="p">,</span> <span class="n">top_5</span> <span class="o">=</span> <span class="n">gather_top_k_metrics</span><span class="p">(</span>
+            <span class="n">prediction</span><span class="o">=</span><span class="n">pred_label</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target_label</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">use_distributed</span>
+        <span class="p">)</span>
+        <span class="n">metric_vals</span><span class="p">[</span><span class="s2">&quot;top1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_1</span>
+        <span class="k">if</span> <span class="s2">&quot;top5&quot;</span> <span class="ow">in</span> <span class="n">metric_names</span><span class="p">:</span>
+            <span class="n">metric_vals</span><span class="p">[</span><span class="s2">&quot;top5&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_5</span>
+
+    <span class="k">if</span> <span class="s2">&quot;iou&quot;</span> <span class="ow">in</span> <span class="n">metric_names</span><span class="p">:</span>
+        <span class="n">inter</span><span class="p">,</span> <span class="n">union</span> <span class="o">=</span> <span class="n">gather_iou_metrics</span><span class="p">(</span>
+            <span class="n">prediction</span><span class="o">=</span><span class="n">pred_label</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target_label</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">use_distributed</span>
+        <span class="p">)</span>
+        <span class="n">metric_vals</span><span class="p">[</span><span class="s2">&quot;iou&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;inter&quot;</span><span class="p">:</span> <span class="n">inter</span><span class="p">,</span> <span class="s2">&quot;union&quot;</span><span class="p">:</span> <span class="n">union</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="s2">&quot;psnr&quot;</span> <span class="ow">in</span> <span class="n">metric_names</span><span class="p">:</span>
+        <span class="n">psnr</span> <span class="o">=</span> <span class="n">compute_psnr</span><span class="p">(</span><span class="n">prediction</span><span class="o">=</span><span class="n">pred_label</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target_label</span><span class="p">)</span>
+        <span class="n">metric_vals</span><span class="p">[</span><span class="s2">&quot;psnr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span>
+            <span class="n">psnr</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">use_distributed</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">metric_vals</span></div>
+
+
+<div class="viewcode-block" id="gather_loss"><a class="viewcode-back" href="../../autogen/metrics.html#metrics.metric_monitor.gather_loss">[docs]</a><span class="k">def</span> <span class="nf">gather_loss</span><span class="p">(</span>
+    <span class="n">loss</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Dict</span><span class="p">],</span> <span class="n">is_distributed</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Number</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function gather losses from different processes and converts to float.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">loss</span> <span class="o">*</span> <span class="mf">1.0</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">tensor_to_python_float</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+        <span class="n">loss_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="s2">&quot;total_loss&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;total_loss key is required for loss functions that return outputs as dictionary.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">loss</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">v_float</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span><span class="p">)</span>
+            <span class="n">loss_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v_float</span>
+        <span class="k">return</span> <span class="n">loss_dict</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Metric monitor supports Tensor or Dict of Tensors&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="gather_grad_norm"><a class="viewcode-back" href="../../autogen/metrics.html#metrics.metric_monitor.gather_grad_norm">[docs]</a><span class="k">def</span> <span class="nf">gather_grad_norm</span><span class="p">(</span>
+    <span class="n">grad_norm</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Dict</span><span class="p">],</span> <span class="n">is_distributed</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Number</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function gather grad_norm from different processes and converts to float.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">grad_norm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">1e-7</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grad_norm</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">grad_norm</span> <span class="o">*</span> <span class="mf">1.0</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grad_norm</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">tensor_to_python_float</span><span class="p">(</span><span class="n">grad_norm</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grad_norm</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+        <span class="n">grad_norm_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">grad_norm</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">v_float</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span><span class="p">)</span>
+            <span class="n">grad_norm_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v_float</span>
+        <span class="k">return</span> <span class="n">grad_norm_dict</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Metric monitor supports Tensor or Dict of Tensors&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="gather_top_k_metrics"><a class="viewcode-back" href="../../autogen/metrics.html#metrics.metric_monitor.gather_top_k_metrics">[docs]</a><span class="k">def</span> <span class="nf">gather_top_k_metrics</span><span class="p">(</span>
+    <span class="n">prediction</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Dict</span><span class="p">],</span> <span class="n">target</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Dict</span><span class="p">],</span> <span class="n">is_distributed</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Number</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Number</span><span class="p">]]]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function gather top-1 and top-5 metrics from different processes and converts to float.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># We have four combinations between prediction and target types:</span>
+    <span class="c1"># 1. (Tensor, Tensor)</span>
+    <span class="c1"># 2. (Dict, Tensor)</span>
+    <span class="c1"># 3. (Dict, Dict)</span>
+    <span class="c1"># 4. (Tensor, Dict) --&gt; This combination is rare</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">):</span>
+        <span class="n">top_1_acc</span><span class="p">,</span> <span class="n">top_5_acc</span> <span class="o">=</span> <span class="n">top_k_accuracy</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+        <span class="n">top_1_acc</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span><span class="n">top_1_acc</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span><span class="p">)</span>
+        <span class="n">top_5_acc</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span><span class="n">top_5_acc</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">top_1_acc</span><span class="p">,</span> <span class="n">top_5_acc</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">Dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">):</span>
+        <span class="n">top1_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">top5_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">pred_k</span><span class="p">,</span> <span class="n">pred_v</span> <span class="ow">in</span> <span class="n">prediction</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">pred_v</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pred_v</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">target</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="p">):</span>  <span class="c1"># Output tensor should be of size [batch_size, num_classes] and target should be of shape [batch_size]</span>
+                <span class="n">top_1_acc</span><span class="p">,</span> <span class="n">top_5_acc</span> <span class="o">=</span> <span class="n">top_k_accuracy</span><span class="p">(</span><span class="n">pred_v</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+                <span class="n">top_1_acc</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span>
+                    <span class="n">top_1_acc</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span>
+                <span class="p">)</span>
+                <span class="n">top_5_acc</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span>
+                    <span class="n">top_5_acc</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span>
+                <span class="p">)</span>
+                <span class="n">top1_dict</span><span class="p">[</span><span class="n">pred_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_1_acc</span>
+                <span class="n">top5_dict</span><span class="p">[</span><span class="n">pred_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_5_acc</span>
+        <span class="k">return</span> <span class="n">top1_dict</span><span class="p">,</span> <span class="n">top5_dict</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">Dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+        <span class="c1"># prediction and target dictionaries should have intersecting keys</span>
+        <span class="n">prediction_keys</span> <span class="o">=</span> <span class="n">prediction</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">target_keys</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+        <span class="n">intersection_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">prediction_keys</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">target_keys</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">intersection_keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;The keys in prediction and target are different. &quot;</span>
+                <span class="s2">&quot; Got: Prediction keys=</span><span class="si">{}</span><span class="s2"> and Target keys=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">prediction_keys</span><span class="p">,</span> <span class="n">target_keys</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="n">top1_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">top5_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">pred_k</span> <span class="ow">in</span> <span class="n">intersection_keys</span><span class="p">:</span>
+            <span class="n">pred_v</span> <span class="o">=</span> <span class="n">prediction</span><span class="p">[</span><span class="n">pred_k</span><span class="p">]</span>
+            <span class="n">target_v</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="n">pred_k</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">pred_v</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target_v</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="n">pred_v</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span>
+                <span class="ow">and</span> <span class="n">target_v</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="p">):</span>  <span class="c1"># Output tensor should be of size [batch_size, num_classes] and target should be of shape [batch_size]</span>
+                <span class="n">top_1_acc</span><span class="p">,</span> <span class="n">top_5_acc</span> <span class="o">=</span> <span class="n">top_k_accuracy</span><span class="p">(</span><span class="n">pred_v</span><span class="p">,</span> <span class="n">target_v</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+                <span class="n">top_1_acc</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span>
+                    <span class="n">top_1_acc</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span>
+                <span class="p">)</span>
+                <span class="n">top_5_acc</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span>
+                    <span class="n">top_5_acc</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span>
+                <span class="p">)</span>
+                <span class="n">top1_dict</span><span class="p">[</span><span class="n">pred_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_1_acc</span>
+                <span class="n">top5_dict</span><span class="p">[</span><span class="n">pred_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_5_acc</span>
+        <span class="k">return</span> <span class="n">top1_dict</span><span class="p">,</span> <span class="n">top5_dict</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+        <span class="c1"># rare but possible</span>
+        <span class="n">top1_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">top5_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">target_k</span><span class="p">,</span> <span class="n">target_v</span> <span class="ow">in</span> <span class="n">target</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">target_v</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="n">prediction</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span>
+                <span class="ow">and</span> <span class="n">target_v</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="p">):</span>  <span class="c1"># Output tensor should be of size [batch_size, num_classes] and target should be of shape [batch_size]</span>
+                <span class="n">top_1_acc</span><span class="p">,</span> <span class="n">top_5_acc</span> <span class="o">=</span> <span class="n">top_k_accuracy</span><span class="p">(</span>
+                    <span class="n">prediction</span><span class="p">,</span> <span class="n">target_v</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">top_1_acc</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span>
+                    <span class="n">top_1_acc</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span>
+                <span class="p">)</span>
+                <span class="n">top_5_acc</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span>
+                    <span class="n">top_5_acc</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span>
+                <span class="p">)</span>
+                <span class="n">top1_dict</span><span class="p">[</span><span class="n">target_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_1_acc</span>
+                <span class="n">top5_dict</span><span class="p">[</span><span class="n">target_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_5_acc</span>
+        <span class="k">return</span> <span class="n">top1_dict</span><span class="p">,</span> <span class="n">top5_dict</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Metric monitor supports Tensor or Dict of Tensors&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="gather_iou_metrics"><a class="viewcode-back" href="../../autogen/metrics.html#metrics.metric_monitor.gather_iou_metrics">[docs]</a><span class="k">def</span> <span class="nf">gather_iou_metrics</span><span class="p">(</span>
+    <span class="n">prediction</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Dict</span><span class="p">],</span> <span class="n">target</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">is_distributed</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Number</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Number</span><span class="p">]]]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function gathers intersection and union metrics from different processes and converts to float.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">):</span>
+        <span class="n">inter</span><span class="p">,</span> <span class="n">union</span> <span class="o">=</span> <span class="n">compute_miou_batch</span><span class="p">(</span><span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
+        <span class="n">inter</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span><span class="n">inter</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span><span class="p">)</span>
+        <span class="n">union</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span><span class="n">union</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">inter</span><span class="p">,</span> <span class="n">union</span>
+    <span class="c1"># elif isinstance(prediction, Dict):</span>
+    <span class="c1">#    logger.error(&quot;IOU metrics are not supported for a dictionary of predictions&quot;)</span>
+    <span class="c1"># We will revisit it later, as per the use case.</span>
+
+    <span class="c1"># inter_dict = {}</span>
+    <span class="c1"># union_dict = {}</span>
+    <span class="c1"># for k, v in prediction.items():</span>
+    <span class="c1">#     inter, union = compute_miou_batch(prediction=v, target=target)</span>
+    <span class="c1">#     inter = tensor_to_python_float(inter, is_distributed=is_distributed)</span>
+    <span class="c1">#     union = tensor_to_python_float(union, is_distributed=is_distributed)</span>
+    <span class="c1">#     inter_dict[k] = inter</span>
+    <span class="c1">#     union_dict[k] = union</span>
+    <span class="c1"># return inter_dict, union_dict</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Metric monitor supports Tensor only for IoU&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="gather_psnr_metrics"><a class="viewcode-back" href="../../autogen/metrics.html#metrics.metric_monitor.gather_psnr_metrics">[docs]</a><span class="k">def</span> <span class="nf">gather_psnr_metrics</span><span class="p">(</span>
+    <span class="n">prediction</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Dict</span><span class="p">],</span> <span class="n">target</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Dict</span><span class="p">],</span> <span class="n">is_distributed</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Number</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function gathers psnr scores from different processes and converts to float.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># We have four combinations between prediction and target types:</span>
+    <span class="c1"># 1. (Tensor, Tensor)</span>
+    <span class="c1"># 2. (Dict, Tensor)</span>
+    <span class="c1"># 3. (Dict, Dict)</span>
+    <span class="c1"># 4. (Tensor, Dict) --&gt; This combination is rare</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">prediction</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">!=</span> <span class="n">target</span><span class="o">.</span><span class="n">numel</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Prediction and target have different number of elements.&quot;</span>
+                <span class="s2">&quot;Got: Prediction=</span><span class="si">{}</span><span class="s2"> and target=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">prediction</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">shape</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="n">psnr</span> <span class="o">=</span> <span class="n">compute_psnr</span><span class="p">(</span><span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
+        <span class="n">psnr</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span><span class="n">psnr</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">psnr</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">Dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">):</span>
+        <span class="n">psnr_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">pred_k</span><span class="p">,</span> <span class="n">pred_v</span> <span class="ow">in</span> <span class="n">prediction</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># only compute PSNR where prediction size and target sizes are the same</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pred_v</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">pred_v</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">==</span> <span class="n">target</span><span class="o">.</span><span class="n">numel</span><span class="p">()):</span>
+                <span class="n">psnr</span> <span class="o">=</span> <span class="n">compute_psnr</span><span class="p">(</span><span class="n">prediction</span><span class="o">=</span><span class="n">pred_v</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
+                <span class="n">psnr</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span><span class="n">psnr</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span><span class="p">)</span>
+                <span class="n">psnr_dict</span><span class="p">[</span><span class="n">pred_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">psnr</span>
+        <span class="k">return</span> <span class="n">psnr_dict</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">Dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+        <span class="c1"># prediction and target dictionaries should have intersecting keys</span>
+        <span class="n">prediction_keys</span> <span class="o">=</span> <span class="n">prediction</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">target_keys</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+        <span class="n">intersection_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">prediction_keys</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">target_keys</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">intersection_keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;The keys in prediction and target are different. &quot;</span>
+                <span class="s2">&quot; Got: Prediction keys=</span><span class="si">{}</span><span class="s2"> and Target keys=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">prediction_keys</span><span class="p">,</span> <span class="n">target_keys</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="n">psnr_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">pred_k</span> <span class="ow">in</span> <span class="n">intersection_keys</span><span class="p">:</span>
+            <span class="n">pred_v</span> <span class="o">=</span> <span class="n">prediction</span><span class="p">[</span><span class="n">pred_k</span><span class="p">]</span>
+            <span class="n">target_v</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="n">pred_k</span><span class="p">]</span>
+            <span class="c1"># only compute PSNR where prediction size and target sizes are the same</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">pred_v</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target_v</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="p">(</span><span class="n">pred_v</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">==</span> <span class="n">target_v</span><span class="o">.</span><span class="n">numel</span><span class="p">())</span>
+            <span class="p">):</span>
+                <span class="n">psnr</span> <span class="o">=</span> <span class="n">compute_psnr</span><span class="p">(</span><span class="n">prediction</span><span class="o">=</span><span class="n">pred_v</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target_v</span><span class="p">)</span>
+                <span class="n">psnr</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span><span class="n">psnr</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span><span class="p">)</span>
+                <span class="n">psnr_dict</span><span class="p">[</span><span class="n">pred_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">psnr</span>
+        <span class="k">return</span> <span class="n">psnr_dict</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+        <span class="n">psnr_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">target_k</span><span class="p">,</span> <span class="n">target_v</span> <span class="ow">in</span> <span class="n">target</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># only compute PSNR where prediction size and target sizes are the same</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target_v</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">prediction</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">==</span> <span class="n">target_v</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>
+            <span class="p">):</span>
+                <span class="n">psnr</span> <span class="o">=</span> <span class="n">compute_psnr</span><span class="p">(</span><span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target_v</span><span class="p">)</span>
+                <span class="n">psnr</span> <span class="o">=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span><span class="n">psnr</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="n">is_distributed</span><span class="p">)</span>
+                <span class="n">psnr_dict</span><span class="p">[</span><span class="n">target_k</span><span class="p">]</span> <span class="o">=</span> <span class="n">psnr</span>
+        <span class="k">return</span> <span class="n">psnr_dict</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Metric monitor supports Tensor or Dict of Tensors&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
